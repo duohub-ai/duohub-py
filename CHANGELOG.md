@@ -1,7 +1,22 @@
 # CHANGELOG
 
 
+## v0.4.0 (2024-10-18)
+
+### Unknown
+
+* Merge branch 'main' of github.com:duohub-ai/duohub-py ([`6ba28a4`](https://github.com/duohub-ai/duohub-py/commit/6ba28a4de6a956fbdd7fc66bf04235037077f2ae))
+
+
 ## v0.3.0 (2024-10-18)
+
+### Chores
+
+* chore(release): bump version to 0.3.0 ([`31dca23`](https://github.com/duohub-ai/duohub-py/commit/31dca233b11e3a775699b02fd1a2fb5e56ef5bad))
+
+### Features
+
+* feat: add new semantic release ([`10694da`](https://github.com/duohub-ai/duohub-py/commit/10694da5ac99ff792cca9cd26a953ebb3c7cc15a))
 
 ### Unknown
 

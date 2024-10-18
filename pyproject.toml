@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "duohub"
+version = "0.4.0"
+description = "duohub retriever package for querying memories"
+authors = ["Oseh Mathias <o@matmail.me>"]
+license = "ISC"
+readme = "README.md"
+homepage = "https://github.com/duohub-ai/duohub-py"
+repository = "https://github.com/duohub-ai/duohub-py"
+documentation = "https://github.com/duohub-ai/duohub-py#readme"
+keywords = ["duohub", "graphrag", "voiceai", "rag", "retrieval", "chatbot"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: ISC License (ISCL)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.32.3"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+black = "^24.10.0"
+flake8 = "^7.1.1"
+mypy = "^1.12.0"
+isort = "^5.13.2"
+python-semantic-release = "^9.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/duohub-ai/duohub-py/issues"
+
+
+[tool.semantic_release]
+version_variable = [
+    "src/duohub/__init__.py:__version__",
+    "pyproject.toml:tool.poetry.version"
+]
+branch = "main"
+upload_to_repository = true
+upload_to_pypi = false
+build_command = "pip install poetry && poetry build"
+commit_message = "chore(release): bump version to {version}"
+commit_author = "github-actions <actions@github.com>"
+hvcs = "github"
+tag_format = "v{version}"
+major_on_zero = false

@@ -36,6 +36,8 @@ jobs:
       - name: Publish | Upload package to PyPI
         uses: pypa/gh-action-pypi-publish@v1.8.11
         if: steps.release.outputs.released == 'true'
+        with:
+          repository-url: https://upload.pypi.org/legacy/
 
       - name: Publish | Upload to GitHub Release Assets
         uses: python-semantic-release/publish-action@v9.8.9

@@ -1,7 +1,22 @@
 # CHANGELOG
 
 
+## v0.5.0 (2024-10-18)
+
+### Unknown
+
+* Merge branch 'main' of github.com:duohub-ai/duohub-py ([`249c2c6`](https://github.com/duohub-ai/duohub-py/commit/249c2c6f961f5d8bbeb4b592aba24f691ee2ab11))
+
+
 ## v0.4.0 (2024-10-18)
+
+### Chores
+
+* chore(release): bump version to 0.4.0 ([`ada5c7f`](https://github.com/duohub-ai/duohub-py/commit/ada5c7f7b343fcf858611b1b1208de754d37472f))
+
+### Features
+
+* feat: add more exceptions to client ([`ee5533a`](https://github.com/duohub-ai/duohub-py/commit/ee5533a590b954ab0878d5e318c1ad26a876bbd8))
 
 ### Unknown
 

@@ -1,5 +1,5 @@
 import httpx
-from .exceptions import APIError
+from .exceptions import APIError, ValidationError, MissingFieldError, InvalidDataTypeError
 from .environment import Environment
 
 class Duohub:
@@ -26,10 +26,24 @@ class Duohub:
         try:
             response = self.client.get(url, params=params)
             response.raise_for_status()
+            data = response.json()
+            
+            # Basic validation of the response
+            if not isinstance(data, dict):
+                raise InvalidDataTypeError("API response is not a dictionary")
+            
+            required_fields = ['result', 'status']  # Add any other required fields
+            for field in required_fields:
+                if field not in data:
+                    raise MissingFieldError(f"Required field '{field}' is missing from the API response")
+            
+            return data
         except httpx.HTTPStatusError as e:
             raise APIError(f"API request failed with status code {e.response.status_code}: {e.response.text}")
         except httpx.RequestError as e:
             raise APIError(f"An error occurred while requesting {e.request.url!r}.")
+        except (ValidationError, MissingFieldError, InvalidDataTypeError) as e:
+            raise APIError(f"API response validation failed: {str(e)}")
         
         return response.json()
 

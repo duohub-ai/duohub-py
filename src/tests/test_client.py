@@ -31,30 +31,69 @@ def test_client_initialization_no_api_key():
 def test_query_success(mock_get, client):
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {"result": "test result"}
+    mock_response.json.return_value = {
+        "payload": "test result",
+        "facts": [{"content": "fact 1"}, {"content": "fact 2"}],
+        "token_count": 10
+    }
     mock_get.return_value = mock_response
 
     result = client.query(query="test query", memoryID="test_memory_id")
-    assert result == {"result": "test result"}
+    assert result == {
+        "payload": "test result",
+        "facts": [{"content": "fact 1"}, {"content": "fact 2"}],
+        "token_count": 10
+    }
 
     mock_get.assert_called_once_with(
         'https://api.duohub.ai/memory/',
-        params={'memoryID': 'test_memory_id', 'query': 'test query', 'assisted': 'false'}
+        params={'memoryID': 'test_memory_id', 'query': 'test query', 'assisted': 'false', 'facts': 'false'}
     )
 
 @patch('httpx.Client.get')
 def test_query_with_assisted_true(mock_get, client):
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {"result": "test result"}
+    mock_response.json.return_value = {
+        "payload": "assisted result",
+        "facts": [{"content": "assisted fact"}],
+        "token_count": 15
+    }
     mock_get.return_value = mock_response
 
     result = client.query(query="test query", memoryID="test_memory_id", assisted=True)
-    assert result == {"result": "test result"}
+    assert result == {
+        "payload": "assisted result",
+        "facts": [{"content": "assisted fact"}],
+        "token_count": 15
+    }
 
     mock_get.assert_called_once_with(
         'https://api.duohub.ai/memory/',
-        params={'memoryID': 'test_memory_id', 'query': 'test query', 'assisted': 'true'}
+        params={'memoryID': 'test_memory_id', 'query': 'test query', 'assisted': 'true', 'facts': 'false'}
+    )
+
+@patch('httpx.Client.get')
+def test_query_with_facts_true(mock_get, client):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "payload": "facts result",
+        "facts": [{"content": "fact 1"}, {"content": "fact 2"}, {"content": "fact 3"}],
+        "token_count": 20
+    }
+    mock_get.return_value = mock_response
+
+    result = client.query(query="test query", memoryID="test_memory_id", facts=True)
+    assert result == {
+        "payload": "facts result",
+        "facts": [{"content": "fact 1"}, {"content": "fact 2"}, {"content": "fact 3"}],
+        "token_count": 20
+    }
+
+    mock_get.assert_called_once_with(
+        'https://api.duohub.ai/memory/',
+        params={'memoryID': 'test_memory_id', 'query': 'test query', 'assisted': 'false', 'facts': 'true'}
     )
 
 @patch('httpx.Client.get')

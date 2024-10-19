@@ -70,12 +70,11 @@ poetry publish --username __token__ --password $PYPI_TOKEN
 
 echo "Release $new_version completed successfully!"
 
-# Prompt for release title and description
-read -p "Enter the release title: " release_title
+# Prompt for release description
 echo "Enter the release description (press Ctrl+D when finished):"
 release_description=$(cat)
 
-# Create a GitHub release with the provided title and description
+# Create a GitHub release with the tag version as title and provided description
 curl -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   -H "Accept: application/vnd.github.v3+json" \
@@ -83,10 +82,10 @@ curl -X POST \
   -d "{
     \"tag_name\": \"v$new_version\",
     \"target_commitish\": \"main\",
-    \"name\": \"$release_title\",
+    \"name\": \"v$new_version\",
     \"body\": \"$release_description\",
     \"draft\": false,
     \"prerelease\": false
   }"
 
-echo "GitHub release created for v$new_version with title: $release_title"
+echo "GitHub release created for v$new_version"

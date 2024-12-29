@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "duohub"
-version = "0.13.3"
+version = "0.13.4"
 description = "duohub retriever package for querying memories"
 authors = ["Oseh Mathias <o@matmail.me>"]
 license = "ISC"
@@ -14,11 +14,15 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: ISC License (ISCL)",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.9,<3.14"
 httpx = "^0.27.2"
 
 

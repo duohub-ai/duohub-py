@@ -18,14 +18,15 @@ class Duohub:
             timeout=httpx.Timeout(30.0, connect=5.0)
         )
 
-    def query(self, query: str, memoryID: str, assisted: bool = False, facts: bool = False) -> Dict[str, Any]:
+    def query(self, query: str, memoryID: str, assisted: bool = False, facts: bool = False, top_k: int = 5) -> Dict[str, Any]:
         url = self.environment.get_full_url("/memory/")
         
         params = {
             "memoryID": memoryID,
             "query": query,
             "assisted": str(assisted).lower(),
-            "facts": str(facts).lower()
+            "facts": str(facts).lower(),
+            "top_k": top_k
         }
         
         try:

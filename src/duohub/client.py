@@ -37,18 +37,18 @@ class Duohub:
             if not isinstance(data, dict):
                 raise InvalidDataTypeError("API response is not a dictionary")
             
-            required_fields = ['payload', 'facts', 'token_count']
+            required_fields = ['payload', 'facts', 'sources']
             for field in required_fields:
                 if field not in data:
                     raise MissingFieldError(f"Required field '{field}' is missing from the API response")
             
             # Validate data types
-            if not isinstance(data['payload'], str):
-                raise InvalidDataTypeError("'payload' must be a string")
+            if not isinstance(data['payload'], list):
+                raise InvalidDataTypeError("'payload' must be a list")
             if not isinstance(data['facts'], list):
                 raise InvalidDataTypeError("'facts' must be a list")
-            if not isinstance(data['token_count'], int):
-                raise InvalidDataTypeError("'token_count' must be an integer")
+            if not isinstance(data['sources'], list):
+                raise InvalidDataTypeError("'sources' must be a list")
             
             # Validate facts structure
             for fact in data['facts']:

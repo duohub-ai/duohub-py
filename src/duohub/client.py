@@ -1,6 +1,5 @@
 import os
 from typing import Dict, Any
-from tqdm import tqdm
 import httpx
 from .exceptions import APIError, ValidationError, MissingFieldError, InvalidDataTypeError
 from .environment import Environment
@@ -94,12 +93,10 @@ class Duohub:
 
         # Upload file with progress
         with open(file_path, 'rb') as f:
-            file_size = os.path.getsize(file_path)
-            with tqdm(total=file_size, unit='B', unit_scale=True, desc="Uploading") as pbar:
-                upload_file_content(
-                    upload_data["uploadUrl"],
-                    f
-                )
+            upload_file_content(
+                upload_data["uploadUrl"],
+                f
+             )
 
         # Create file record
         return create_file_record(

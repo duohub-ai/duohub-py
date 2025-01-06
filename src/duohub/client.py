@@ -1,7 +1,11 @@
+import os
+from typing import Dict, Any
+from tqdm import tqdm
 import httpx
 from .exceptions import APIError, ValidationError, MissingFieldError, InvalidDataTypeError
 from .environment import Environment
-from typing import Dict, Any
+from .methods.files.upload import get_upload_url, upload_file_content
+from .methods.files.create import create_file_record
 
 class Duohub:
     def __init__(self, api_key=None):
@@ -61,8 +65,47 @@ class Duohub:
             raise APIError(f"API response validation failed: {str(e)}")
         except ValueError as e:
             raise APIError(f"Error parsing JSON response: {str(e)}")
+
+    def add_file(self, file_path: str = None, external_uri: str = None, file_type: str = None) -> Dict[str, Any]:
+        """Add a file to Duohub.
         
-        return response.json()
+        Args:
+            file_path: Path to local file to upload
+            external_uri: External URI (requires file_type)
+            file_type: Required when using external_uri ('website', 'sitemap', or 'website_bulk')
+        """
+        if external_uri:
+            if not file_type in ['website', 'sitemap', 'website_bulk']:
+                raise ValueError("file_type must be 'website', 'sitemap', or 'website_bulk' when using external_uri")
+            return create_file_record(
+                name=external_uri,
+                external_uri=external_uri,
+                file_type=file_type
+            )
+
+        if not file_path:
+            raise ValueError("Must provide either file_path or external_uri")
+
+        # Get file name from path
+        name = os.path.basename(file_path)
+
+        # Get upload URL
+        upload_data = get_upload_url(name)
+
+        # Upload file with progress
+        with open(file_path, 'rb') as f:
+            file_size = os.path.getsize(file_path)
+            with tqdm(total=file_size, unit='B', unit_scale=True, desc="Uploading") as pbar:
+                upload_file_content(
+                    upload_data["uploadUrl"],
+                    f
+                )
+
+        # Create file record
+        return create_file_record(
+            name=name,
+            key=upload_data["key"]
+        )
 
     def __del__(self):
         if hasattr(self, 'client'):

@@ -23,6 +23,11 @@ You will need an API key to use the client. You can get one by signing up on the
       - [Fact Query Response](#fact-query-response)
     - [Combining Options](#combining-options)
       - [Combining Options Response](#combining-options-response)
+    - [Additional Methods](#additional-methods)
+      - [Adding Files](#adding-files)
+      - [Creating a Memory](#creating-a-memory)
+      - [Managing Files in Memory](#managing-files-in-memory)
+      - [Starting Ingestion](#starting-ingestion)
   - [Contributing](#contributing)
 
 ## Installation
@@ -52,17 +57,27 @@ Output schema is as follows:
 
 ```json
 {
-  "payload": "string",
+  "payload": [
+    {
+      "content": "string",
+      "score": 1
+    }
+  ],
   "facts": [
     {
       "content": "string"
     }
   ],
-  "token_count": 0
+  "sources": [
+    {
+      "id": "string",
+      "name": "string", 
+      "url": "string",
+      "score": 1
+    }
+  ]
 }
 ```
-
-Token count is the number of tokens in the graph context. Regardless of your mode, you will get the same token content if you use the same query and memory ID on a graph.
 
 ### Options
 
@@ -70,6 +85,7 @@ Token count is the number of tokens in the graph context. Regardless of your mod
 - `assisted`: Whether to return an answer in the response. Defaults to `False`.
 - `query`: The query to search the graph with.
 - `memoryID`: The memory ID to isolate your search results to.
+- `top_k`: Number of top memories to return. Defaults to 5.
 
 ### Default Mode - Voice AI Compatible
 
@@ -88,7 +104,7 @@ print(response)
 
 #### Default Mode Response
 
-Your response (located in `payload`) is a string representation of a subgraph that is relevant to your query returned as the payload. You can pass this to your context window using a system message and user message template. 
+Your response (located in `payload[0].content`) is a string representation of a subgraph that is relevant to your query returned as the payload. You can pass this to your context window using a system message and user message template. 
 
 ### Assisted Queries - Voice AI Compatible
 
@@ -112,9 +128,14 @@ Assisted mode results will be a JSON object with the following structure:
 
 ```json
 {
-    "payload": "The capital of France is Paris.",
+    "payload": [
+        {
+            "content": "The capital of France is Paris.",
+            "score": 1
+        }
+    ],
     "facts": [],
-    "tokens": 100,
+    "sources": []
 }
 ```
 
@@ -138,11 +159,16 @@ print(response)
 
 #### Fact Query Response
 
-Your response (located in `facts`) will be a list of facts that are relevant to your query.
+Your response will include both payload and facts:
 
 ```json
 {
-  "payload": "subgraph_content",
+  "payload": [
+    {
+      "content": "Paris is the capital of France.",
+      "score": 1
+    }
+  ],
   "facts": [
     {
       "content": "Paris is the capital of France."
@@ -154,7 +180,14 @@ Your response (located in `facts`) will be a list of facts that are relevant to 
       "content": "France is a country in Europe."
     }
   ],
-  "token_count": 100
+  "sources": [
+    {
+      "id": "123",
+      "name": "Wikipedia",
+      "url": "https://wikipedia.org/wiki/Paris",
+      "score": 1
+    }
+  ]
 }
 ```
 
@@ -178,7 +211,12 @@ Your response will be a JSON object with the following structure:
 
 ```json
 {
-  "payload": "Paris is the capital of France.",
+  "payload": [
+    {
+      "content": "Paris is the capital of France.",
+      "score": 1
+    }
+  ],
   "facts": [
     {
       "content": "Paris is the capital of France."
@@ -190,11 +228,82 @@ Your response will be a JSON object with the following structure:
       "content": "France is a country in Europe."
     }
   ],
-  "token_count": 100
+  "sources": [
+    {
+      "id": "123",
+      "name": "Wikipedia",
+      "url": "https://wikipedia.org/wiki/Paris",
+      "score": 1
+    }
+  ]
 }
 ```
 
+### Additional Methods
 
+#### Adding Files
+
+You can add files to Duohub using either local files or external URIs:
+
+```python
+# Add a local file
+response = client.add_file(file_path="path/to/your/file.txt")
+
+# Add an external website or sitemap
+response = client.add_file(
+    external_uri="https://example.com",
+    file_type="website"  # Options: 'website', 'sitemap', or 'website_bulk'
+)
+```
+
+#### Creating a Memory
+
+Create a new memory (graph or vector storage):
+
+```python
+response = client.create_memory(
+    name="My Memory",
+    memory_type="graph",  # or "vector"
+    description="Optional description",
+    ontology="culture",  # Required for graph type. Options: culture, essays, support_requests
+    chunk_size=250,  # Only for vector type
+    chunk_overlap=10,  # Only for vector type (1-50)
+    webhook_url="https://your-webhook.com",  # Optional
+    acceleration=False  # Optional
+)
+```
+
+#### Managing Files in Memory
+
+Add files to an existing memory:
+
+```python
+response = client.add_files_to_memory(
+    memory_id="your_memory_id",
+    files=["file_id_1", "file_id_2"]
+)
+```
+
+Remove a file from memory:
+
+```python
+response = client.delete_file_from_memory(
+    memory_id="your_memory_id",
+    file_id="file_id_to_remove"
+)
+```
+
+#### Starting Ingestion
+
+After adding files, start the ingestion process:
+
+```python
+response = client.start_ingestion(
+    memory_id="your_memory_id"
+)
+```
+
+Note: The file management endpoints can only be used with memories created on or after 17-Dec-2024.
 
 ## Contributing
 

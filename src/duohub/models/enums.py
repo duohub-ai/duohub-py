@@ -39,8 +39,16 @@ class FileType(str, Enum):
     sitemap = "sitemap"
     website_bulk = "website_bulk"
     document = "document"
-
     image = "image"
     audio = "audio"
     video = "video"
 
+class MemoryType(str, Enum):
+    """Enum representing types of memory storage.
+    
+    Attributes:
+        graph: Graph-based memory
+        vector: Vector-based memory
+    """
+    graph = "graph"
+    vector = "vector"

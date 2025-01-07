@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "duohub"
-version = "2.1.2"
+version = "2.1.3"
 description = "duohub retriever package for querying memories"
 authors = ["Oseh Mathias <o@matmail.me>"]
 license = "ISC"

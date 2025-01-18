@@ -12,6 +12,7 @@ def create_memory(
     chunk_overlap: int = 10,
     webhook_url: str = None,
     acceleration: bool = False,
+    fact_extraction: bool = False,
     env: Optional[Environment] = None
 ) -> Dict[str, Any]:
     """Create a new memory (graph or vector).
@@ -27,7 +28,7 @@ def create_memory(
         webhook_url: Optional webhook URL for notifications
         acceleration: Whether to enable acceleration
         env: Optional environment instance
-        
+        fact_extraction: Whether to enable fact extraction
     Returns:
         dict: Created memory data
         
@@ -60,7 +61,8 @@ def create_memory(
         "chunkSize": chunk_size,
         "chunkOverlap": chunk_overlap,
         "webhookUrl": webhook_url,
-        "acceleration": acceleration
+        "acceleration": acceleration,
+        "factExtraction": fact_extraction
     }
     
     # Remove None values

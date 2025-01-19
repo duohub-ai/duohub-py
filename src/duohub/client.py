@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 import httpx
 from .exceptions import APIError, ValidationError, MissingFieldError, InvalidDataTypeError
 from .environment import Environment
@@ -211,6 +211,145 @@ class Duohub:
         from .methods.memory.start_ingestion import start_ingestion as start_ingestion_request
         return start_ingestion_request(
             memory_id=memory_id,
+            env=self.environment
+        )
+
+    # Message Methods
+    def get_message(self, message_id: str) -> Dict[str, Any]:
+        """Get a message by ID."""
+        from .methods.messages.get import get_message
+        return get_message(message_id=message_id, env=self.environment)
+
+    def list_messages(
+        self,
+        session_id: Optional[str] = None,
+        customer_user_id: Optional[str] = None,
+        role: Optional[str] = None,
+        limit: Optional[int] = 10,
+        next_token: Optional[str] = None,
+        previous_token: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """List messages with optional filtering."""
+        from .methods.messages.list import list_messages
+        return list_messages(
+            session_id=session_id,
+            customer_user_id=customer_user_id,
+            role=role,
+            limit=limit,
+            next_token=next_token,
+            previous_token=previous_token,
+            env=self.environment
+        )
+
+    def delete_message(self, message_id: str) -> Dict[str, Any]:
+        """Delete a message by ID."""
+        from .methods.messages.delete import delete_message
+        return delete_message(message_id=message_id, env=self.environment)
+
+    def create_message(
+        self,
+        content: str,
+        role: str,
+        session_id: str,
+        customer_user_id: Optional[str] = None,
+        message_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Create a new message."""
+        from .methods.messages.create import create_message
+        return create_message(
+            content=content,
+            role=role,
+            session_id=session_id,
+            customer_user_id=customer_user_id,
+            message_id=message_id,
+            env=self.environment
+        )
+
+    # User Methods
+    def get_user(self, user_id: str) -> Dict[str, Any]:
+        """Get a user by ID."""
+        from .methods.users.get import get_user
+        return get_user(user_id=user_id, env=self.environment)
+
+    def list_users(
+        self,
+        limit: Optional[int] = 10,
+        next_token: Optional[str] = None,
+        previous_token: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """List users with pagination."""
+        from .methods.users.list import list_users
+        return list_users(
+            limit=limit,
+            next_token=next_token,
+            previous_token=previous_token,
+            env=self.environment
+        )
+
+    def delete_user(self, user_id: str) -> Dict[str, Any]:
+        """Delete a user by ID."""
+        from .methods.users.delete import delete_user
+        return delete_user(user_id=user_id, env=self.environment)
+
+    def create_user(
+        self,
+        first_name: str,
+        last_name: str,
+        email: Optional[str] = None,
+        user_id: Optional[str] = None,
+        phone: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Create a new user."""
+        from .methods.users.create import create_user
+        return create_user(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            user_id=user_id,
+            phone=phone,
+            env=self.environment
+        )
+
+    # Session Methods
+    def get_session(self, session_id: str) -> Dict[str, Any]:
+        """Get a session by ID."""
+        from .methods.sessions.get import get_session
+        return get_session(session_id=session_id, env=self.environment)
+
+    def list_sessions(
+        self,
+        customer_user_id: Optional[str] = None,
+        limit: Optional[int] = 10,
+        next_token: Optional[str] = None,
+        previous_token: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """List sessions with optional filtering."""
+        from .methods.sessions.list import list_sessions
+        return list_sessions(
+            customer_user_id=customer_user_id,
+            limit=limit,
+            next_token=next_token,
+            previous_token=previous_token,
+            env=self.environment
+        )
+
+    def delete_session(self, session_id: str) -> Dict[str, Any]:
+        """Delete a session by ID."""
+        from .methods.sessions.delete import delete_session
+        return delete_session(session_id=session_id, env=self.environment)
+
+    def create_session(
+        self,
+        customer_user_id: Optional[str] = None,
+        session_id: Optional[str] = None,
+        metadata: Optional[List[Dict[str, str]]] = None
+    ) -> Dict[str, Any]:
+        """Create a new session."""
+        from .methods.sessions.create import create_session
+        return create_session(
+            customer_user_id=customer_user_id,
+            session_id=session_id,
+            metadata=metadata,
             env=self.environment
         )
 
